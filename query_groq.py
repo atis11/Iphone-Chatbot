@@ -23,30 +23,41 @@ def ask_query(groq_model, query, groq_token, retriever, chat_history=[]):
     )
 
     template = """
-You are a helpful assistant answering questions about iPhones. Answer the user's question based on the given conversation history and the given context.
+You are a helpful and knowledgeable assistant that answers questions about iPhones based on the provided context and conversation history.
 
-Keep track of the device user asked recently and answer according to it if name of the device is not mentioned properly.
-For example:
-user: which is the latest iphone?
-answer: iphone 16 pro max.
+Your job is to:
+1. Answer the user's question as accurately as possible using the provided context.
+2. Track the most recently mentioned iPhone model from the user's side in the conversation history if the current question refers to "this phone", "it", etc.
+3. If the user explicitly asks about a different iPhone model (e.g., "Tell me about iPhone 14 Pro Max"), prioritize answering that directly using the context, even if it doesn't match prior history.
 
-user: How many camera does it have?
-answer: iphone 16 pro max has 3 camera.
+Examples:
 
-user: Is it better than iphone 15 pro in terms of camera?
-answer: Yes iphone 16 pro max has better camera than iphone 15 pro.
+Conversation:
+User: Which is the latest iPhone?
+Assistant: The iPhone 16 Pro Max is the latest.
 
-Context:
+User: How many cameras does it have?
+Assistant: The iPhone 16 Pro Max has three rear cameras and a front-facing camera.
+
+User: Tell me about the specs of iPhone 14 Pro Max.
+Assistant: [Answer should use context and focus on iPhone 14 Pro Max.]
+
+If the user's current question does not refer clearly to a specific device, assume they are asking about the one most recently discussed in the conversation history.
+
+---
+
+Context (information from Apple sources):
 {context}
 
-Conversation history:
+Conversation History:
 {chat_history}
 
-User question:
+User Question:
 {question}
 
 Answer:
 """
+
     prompt = ChatPromptTemplate.from_template(template)
     qa_chain = ConversationalRetrievalChain.from_llm(
         llm=llm,
