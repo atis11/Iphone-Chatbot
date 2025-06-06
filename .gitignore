@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+
+# Virtual environment
+venv/
+
+# Environment variables
+.env
+
+# Vector store database
+vectorstore.db/
+
+# VSCode settings (optional)
+.vscode/
