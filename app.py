@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 st.title("Ask anything about the iPhones")
 
 # Load environment variables early
-load_dotenv()
+# load_dotenv()
 
 # Cache the retriever to avoid reloading each time
 @st.cache_resource
@@ -17,7 +17,7 @@ retriever = get_cached_retriever()
 
 # query_model = "gpt2"
 groq_model = "llama-3.1-8b-instant"
-groq_token = os.getenv("groq_api_key")
+groq_token = st.secrets["groq_api_key"]
 
 query = st.text_area("Your question:")
 show_sources = st.checkbox("Show sources")
